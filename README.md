@@ -1,10 +1,10 @@
-# test-project
+# Vue Calendar
 
-> A Vue.js project
+A series of calendar views for Vue.js projects.
 
 ## Build Setup
 
-``` bash
+```bash
 # install dependencies
 npm install
 
