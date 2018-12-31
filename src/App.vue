@@ -1,10 +1,11 @@
 <template>
-  <div id="app">
-    <MonthView v-bind:initialMonth="month" v-bind:initialYear="year" />
-  </div>
+  <router-view></router-view>
 </template>
 
 <script>
+//<YearView />
+//<MonthView v-bind:initialMonth="month" v-bind:initialYear="year" />
+import YearView from "./components/YearView";
 import MonthView from "./components/MonthView";
 
 export default {
@@ -16,6 +17,7 @@ export default {
     };
   },
   components: {
+    YearView,
     MonthView
   }
 };

@@ -1,28 +1,51 @@
 <template>
   <div class="month">
     <nav id="month-nav">
-      <h1>{{ monthName }} {{ year }}</h1>
+      <h1>
+        {{ monthName }}
+        <router-link v-if="!miniMonth" :to="`/${year}`">{{ year }}</router-link>
+      </h1>
     </nav>
     <div id="month-display">
-      <ul class="days">
+      <ul id="days">
         <li
           v-for="n of daysOfPrevMonthShown()"
           :key="-n"
-          class="day last-month"
-          @click="goToPrevMonth"
+          class="day"
+          v-bind:class="{ 'mini-day': miniMonth }"
         >
-          {{ n }}
+          <router-link
+            v-if="!miniMonth"
+            class="last-month"
+            :to="prevMonthPath"
+            >{{ n }}</router-link
+          >
+          <span v-else class="last-month">{{ n }}</span>
         </li>
-        <li v-for="n in daysOfThisMonth()" :key="n" class="day this-month">
-          {{ n }}
+        <li
+          v-for="n in daysOfThisMonth()"
+          :key="n"
+          class="day"
+          v-bind:class="{ 'mini-day': miniMonth }"
+        >
+          <router-link v-if="!miniMonth" class="this-month" :to="dayPath(n)">{{
+            n
+          }}</router-link>
+          <span v-else class="this-month">{{ n }}</span>
         </li>
         <li
           v-for="n of daysOfNextMonthShown()"
           :key="n + daysInThisMonth"
-          class="day next-month"
-          @click="goToNextMonth"
+          class="day"
+          v-bind:class="{ 'mini-day': miniMonth }"
         >
-          {{ n }}
+          <router-link
+            v-if="!miniMonth"
+            class="next-month"
+            :to="nextMonthPath"
+            >{{ n }}</router-link
+          >
+          <span v-else class="next-month">{{ n }}</span>
         </li>
       </ul>
     </div>
@@ -35,23 +58,18 @@ import { daysInMonth } from "@/utils/calendar_functions.js";
 export default {
   name: "MonthView",
   props: {
-    initialMonth: {
+    month: {
       type: Number,
-      required: true,
       validator: function(value) {
         return value >= 0 && value <= 11;
       }
     },
-    initialYear: {
-      type: Number,
-      required: true
+    year: {
+      type: Number
+    },
+    miniMonth: {
+      type: Boolean
     }
-  },
-  data() {
-    return {
-      month: this.initialMonth,
-      year: this.initialYear
-    };
   },
   methods: {
     daysOfPrevMonthShown() {
@@ -68,11 +86,8 @@ export default {
       let weekDay = lastDay.getDay();
       return [...Array(6 - weekDay).keys()].map(i => i + 1);
     },
-    goToNextMonth() {
-      this.month += 1;
-    },
-    goToPrevMonth() {
-      this.month -= 1;
+    dayPath(day) {
+      return `/${this.year}/${this.month + 1}/${day}`;
     }
   },
   computed: {
@@ -84,13 +99,25 @@ export default {
     daysInThisMonth() {
       return daysInMonth(this.month, this.year);
     },
-    prevMonth() {
-      let month = this.month - 1;
+    nextMonthPath() {
+      return `/${this.nextMonth.year}/${this.nextMonth.month + 1}`;
+    },
+    prevMonthPath() {
+      return `/${this.prevMonth.year}/${this.prevMonth.month + 1}`;
+    },
+    nextMonth() {
+      let month = this.month + 1;
       let year = this.year;
       if (month > 11) {
         month -= 12;
         year += 1;
-      } else if (month < 0) {
+      }
+      return { month: month, year: year };
+    },
+    prevMonth() {
+      let month = this.month - 1;
+      let year = this.year;
+      if (month < 0) {
         month += 12;
         year -= 1;
       }
@@ -111,38 +138,55 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h1 {
   text-align: center;
   font-weight: bold;
   font-size: 1.5em;
 }
-ul.days {
+ul#days {
   list-style-type: none;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding: 0;
+  border: 1px solid black;
+  padding: 0%;
 }
 li.day {
   display: inline-block;
   width: 13%;
+  width: calc(100% / 7 - 2px);
+  padding-top: 13%;
+  padding-top: calc(100% / 7 - 2px);
   height: 0;
-  padding-top: 0%;
-  padding-bottom: 13%;
+  position: relative;
+
   border: 1px solid black;
   text-align: right;
   font-size: 6vw;
 }
-li.this-month {
+li.mini-day > span {
+  font-size: 3vw;
+}
+a {
+  text-decoration: none;
+  color: black;
+}
+.this-month {
   color: black;
   background-color: white;
 }
-
-li.last-month,
-li.next-month {
+.last-month,
+.next-month {
   color: grey;
   background-color: lightgray;
+}
+li.day > a,
+li.day > span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
 </style>
