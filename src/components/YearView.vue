@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     monthName(month) {
-      return new Date(0, month).toLocaleDateString("en-US", {
+      return new Date(0, month).toLocaleDateString("en-CA", {
         month: "long"
       });
     },

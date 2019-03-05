@@ -92,7 +92,7 @@ export default {
   },
   computed: {
     monthName() {
-      return new Date(0, this.month).toLocaleDateString("en-US", {
+      return new Date(0, this.month).toLocaleDateString("en-CA", {
         month: "long"
       });
     },

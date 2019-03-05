@@ -1,5 +1,5 @@
 {
-  "name": "vue-calendar",
+  "name": "my-vue-calendar",
   "version": "1.0.0",
   "description": "A series of calendar views made in Vue.js",
   "main": "src/main.js",

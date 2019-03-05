@@ -7,6 +7,7 @@
 //<MonthView v-bind:initialMonth="month" v-bind:initialYear="year" />
 import YearView from "./components/YearView";
 import MonthView from "./components/MonthView";
+import DayView from "./components/DayView";
 
 export default {
   name: "App",
@@ -18,7 +19,8 @@ export default {
   },
   components: {
     YearView,
-    MonthView
+    MonthView,
+    DayView
   }
 };
 </script>
